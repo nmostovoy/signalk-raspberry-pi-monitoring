@@ -1,25 +1,4 @@
 {
-  "_from": "signalk-raspberry-pi-monitoring@1.0.0",
-  "_id": "signalk-raspberry-pi-monitoring@1.0.0",
-  "_inBundle": false,
-  "_location": "/signalk-raspberry-pi-monitoring",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "signalk-raspberry-pi-monitoring@1.0.0",
-    "name": "signalk-raspberry-pi-monitoring",
-    "escapedName": "signalk-raspberry-pi-monitoring",
-    "rawSpec": "1.0.0",
-    "saveSpec": null,
-    "fetchSpec": "1.0.0"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_spec": "signalk-raspberry-pi-monitoring@1.0.0",
-  "_where": "/home/pi/.signalk",
   "author": {
     "name": "Nikolay Mostovoy",
     "email": "mostovoy.nikolay@gmail.com"
