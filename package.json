@@ -1,4 +1,25 @@
 {
+  "_from": "signalk-raspberry-pi-monitoring@1.0.0",
+  "_id": "signalk-raspberry-pi-monitoring@1.0.0",
+  "_inBundle": false,
+  "_location": "/signalk-raspberry-pi-monitoring",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "signalk-raspberry-pi-monitoring@1.0.0",
+    "name": "signalk-raspberry-pi-monitoring",
+    "escapedName": "signalk-raspberry-pi-monitoring",
+    "rawSpec": "1.0.0",
+    "saveSpec": null,
+    "fetchSpec": "1.0.0"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_spec": "signalk-raspberry-pi-monitoring@1.0.0",
+  "_where": "/home/pi/.signalk",
   "author": {
     "name": "Nikolay Mostovoy",
     "email": "mostovoy.nikolay@gmail.com"
@@ -13,7 +34,7 @@
   },
   "deprecated": false,
   "description": "Signal K Node Server Plugin for Raspberry PI monitoring (based on signalk-raspberry-pi-temperature)",
-  "homepage": "https://github.com/nmostovoy/signalk-raspberry-pi-monitoring#readme",
+  "homepage": "https://github.com/sbender9/signalk-raspberry-pi-monitoring#readme",
   "keywords": [
     "signalk-node-server-plugin"
   ],
@@ -27,5 +48,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.1.0"
+  "version": "1.0.0"
 }
