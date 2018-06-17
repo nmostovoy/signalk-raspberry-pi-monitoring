@@ -132,7 +132,7 @@ module.exports = function(app) {
     function getCpuTemperature() {
       var processcputemp = spawn('sh', ['-c', cpu_temp_command ])
 
-      processcpustemp.stdout.on('data', (data) => {
+      processcputemp.stdout.on('data', (data) => {
         debug(`got cpu  ${data}`)
         var cpu_temp = (Number(data)/1000).toFixed(2)
         if (options.temp_unit === 'F') {
