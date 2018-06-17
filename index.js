@@ -174,7 +174,7 @@ module.exports = function(app) {
         var re = /cpu/im
         if (data.toString().match(re)) {
           cpuUtilReady = 1
-          var cpu_util = data.split('\n')
+          var cpu_util = data.toString().split('\n')
           cpu_util.forEach(function(cpu_util_line){
             spl_line = cpu_util_line.split('\s*')
             var re2 = /^[0-9]?/
