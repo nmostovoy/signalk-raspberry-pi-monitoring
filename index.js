@@ -175,7 +175,7 @@ module.exports = function(app) {
         if (data.match(re)) {
           cpuUtilReady = 1
           var cpu_util = data.split('\n')
-          cpu_util.forEach(function(cpu_util_line)){
+          cpu_util.forEach(function(cpu_util_line){
             spl_line = cpu_util_line.split('\s*')
             var re2 = /^[0-9]?/
             if (cpu_util_line[2].match(re2)) {
@@ -215,7 +215,7 @@ module.exports = function(app) {
                 })
               }
             }
-          }
+          })
         }
       })
 
