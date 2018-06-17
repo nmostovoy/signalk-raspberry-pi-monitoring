@@ -183,7 +183,7 @@ module.exports = function(app) {
                 debug(`cpu utilisation core ${cpu_util_line[1]} is ${cpu_util_line[11]}`)
                 var newPath
                 pathArray = options.path_cpu_util.split('.')
-                for (i=0; i < (pathArray.lenght -2; i++)) {
+                for (i=0; i < (pathArray.lenght -2); i++) {
                   newPath = newPath + pathArray[i]
                 }
                 newPath = newPath + ".core." + cpu_util_line[1]
