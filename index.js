@@ -176,19 +176,19 @@ module.exports = function(app) {
           cpuUtilReady = 1
           var cpu_util = data.toString().split('\n')
           cpu_util.forEach(function(cpu_util_line){
-            spl_line = cpu_util_line.split('\s*')
+            spl_line = cpu_util_line.split('\s+')
             var re2 = /^[0-9]?/
-            if (cpu_util_line[2].match(re2)) {
-              if (cpu_util_line[1].match(re2)){
-                debug(`cpu utilisation core ${cpu_util_line[1]} is ${cpu_util_line[11]}`)
+            if (spl_line[2].match(re2)) {
+              if (spl_line[1].match(re2)){
+                debug(`cpu utilisation core ${spl_line[1]} is ${spl_line[11]}`)
                 var newPath
                 pathArray = options.path_cpu_util.split('.')
                 for (i=0; i < (pathArray.lenght -2); i++) {
                   newPath = newPath + pathArray[i]
                 }
-                newPath = newPath + ".core." + cpu_util_line[1]
+                newPath = newPath + ".core." + spl_line[1]
                 newPath = newPath + "." + pathArray[(pathArray.length-1)]
-                cpu_util_core = 100 - Number(cpu_util_line[11])
+                cpu_util_core = 100 - Number(spl_line[11])
                 app.handleMessage(plugin.id, {
                   updates: [
                     {
@@ -201,8 +201,8 @@ module.exports = function(app) {
                 })
               }
               else {
-                debug(`cpu utilisation is ${cpu_util_line[11]}`)
-                cpu_util_all = 100 - Number(cpu_util_line[11])
+                debug(`cpu utilisation is ${spl_line[11]}`)
+                cpu_util_all = 100 - Number(spl_line[11])
                 app.handleMessage(plugin.id, {
                   updates: [
                     {
