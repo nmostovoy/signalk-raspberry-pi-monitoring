@@ -172,7 +172,7 @@ module.exports = function(app) {
       processcpuutilfull.stdout.on('data', (data) => {
         debug(`got cpu utilisation  ${data}`)
         var re = /cpu/im
-        if (data.match(re)) {
+        if (data.toString().match(re)) {
           cpuUtilReady = 1
           var cpu_util = data.split('\n')
           cpu_util.forEach(function(cpu_util_line){
