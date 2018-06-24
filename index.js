@@ -237,7 +237,7 @@ module.exports = function(app) {
 
       sdutil.stdout.on('data', (data) => {
         debug(`got sd  ${data}`)
-        var sd_util = data.toString().replace(/(\n|\r)+$/, '')
+        var sd_util = Number(data.toString().replace(/(\n|\r)+$/, ''))/100
         app.handleMessage(plugin.id, {
           updates: [
             {
