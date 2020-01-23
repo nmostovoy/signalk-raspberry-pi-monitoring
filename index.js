@@ -37,15 +37,25 @@ module.exports = function(app) {
     type: "object",
     description: "The user running node server must have permission to sudo without needing a password",
     properties: {
+      use_kelvin: {
+        title: "Use Kelvin for temperatures",
+        type: "boolean",
+        default: true
+      },
       path_cpu_temp: {
-        title: "SignalK Path for CPU temperature (K)",
+        title: "SignalK Path for CPU temperature",
         type: "string",
         default: "environment.rpi.cpu.temperature",
       },
       path_gpu_temp: {
-        title: "SignalK Path for GPU temperature (K)",
+        title: "SignalK Path for GPU temperature",
         type: "string",
         default: "environment.rpi.gpu.temperature",
+      },
+      use_percentage: {
+        title: "Use percentage for utilisations",
+        type: "boolean",
+        default: false
       },
       path_cpu_util: {
         title: "SignalK Path for CPU utilisation (Please install sysstat for per core monitoring)",
@@ -87,7 +97,14 @@ module.exports = function(app) {
 
       gputemp.stdout.on('data', (data) => {
         debug(`got gpu  ${data}`)
-        var gpu_temp = (Number(data.toString().split('=')[1].split('\'')[0]) + 273.15).toFixed(2)
+        var gpu_temp = Number(data.toString().split('=')[1].split('\'')[0])
+        
+        if(options.use_kelvin){
+          gpu_temp += 273.15
+        }
+
+        gpu_temp = gpu_temp.toFixed(2)
+        
         debug(`gpu temp is ${gpu_temp}`)
 
         app.handleMessage(plugin.id, {
@@ -116,7 +133,14 @@ module.exports = function(app) {
 
       cputemp.stdout.on('data', (data) => {
         debug(`got cpu  ${data}`)
-        var cpu_temp = (Number(data)/1000 + 273.15).toFixed(2)
+        var cpu_temp = Number(data)/1000
+
+        if(options.use_kelvin){
+          cpu_temp += 273.15
+        }
+
+        cpu_temp = cpu_temp.toFixed(2)
+
         debug(`cpu temp is ${cpu_temp}`)
 
         app.handleMessage(plugin.id, {
@@ -160,7 +184,14 @@ module.exports = function(app) {
               }
               newPath = newPath + "core." + (Number(spl_line[1])+1).toString()
               newPath = newPath + "." + pathArray[(pathArray.length-1)]
-              var cpu_util_core = ((100 - Number(spl_line[11]))/100).toFixed(2)
+              var cpu_util_core = Number(spl_line[11]) / 10
+
+              if(!options.use_percentage){
+                cpu_util_core /= 100
+	      }
+
+              cpu_util_core = cpu_util_core.toFixed(2)
+
               app.handleMessage(plugin.id, {
                 updates: [
                   {
@@ -174,7 +205,14 @@ module.exports = function(app) {
             }
             else {
               debug(`cpu utilisation is ${spl_line[11]}`)
-              cpu_util_all = ((100 - Number(spl_line[11]))/100).toFixed(2)
+              cpu_util_all = Number(spl_line[11])/10
+
+              if(!options.use_percentage){
+                cpu_util_all /= 100
+              }
+
+              cpu_util_all = cpu_util_all.toFixed(2)
+
               app.handleMessage(plugin.id, {
                 updates: [
                   {
@@ -208,7 +246,14 @@ module.exports = function(app) {
         mem_util.forEach(function(mem_util_line){
           var splm_line = mem_util_line.replace(/ +/g, ' ').split(' ')
           if (splm_line[0].toString() === "Mem:"){
-            var mem_util_per = (Number(splm_line[2])/Number(splm_line[1])).toFixed(2)
+            var mem_util_per = Number(splm_line[2])/Number(splm_line[1])
+
+            if(options.use_percentage){
+              mem_util_per *= 100
+            }           
+
+            mem_util_per = mem_util_per.toFixed(2)
+
             app.handleMessage(plugin.id, {
               updates: [
                 {
@@ -237,7 +282,14 @@ module.exports = function(app) {
 
       sdutil.stdout.on('data', (data) => {
         debug(`got sd  ${data}`)
-        var sd_util = Number(data.toString().replace(/(\n|\r)+$/, ''))/100
+        var sd_util = Number(data.toString().replace(/(\n|\r)+$/, ''))
+
+        if(!options.use_percentage){
+          sd_util /= 100
+        }
+
+        sd_util = sd_util.toFixed(2)
+
         app.handleMessage(plugin.id, {
           updates: [
             {
