@@ -19,10 +19,10 @@ const debug = require('debug')('signalk-raspberry-pi-monitoring')
 const _ = require('lodash')
 const spawn = require('child_process').spawn
 
-const gpu_temp_command = 'sudo /opt/vc/bin/vcgencmd measure_temp'
-const cpu_temp_command = 'sudo cat /sys/class/thermal/thermal_zone0/temp'
-const cpu_util_mpstat_command = 'sudo mpstat -P ALL\|grep \\\:\|grep -v \\\%'
-const mem_util_command = 'sudo free'
+const gpu_temp_command = '/opt/vc/bin/vcgencmd measure_temp'
+const cpu_temp_command = 'cat /sys/class/thermal/thermal_zone0/temp'
+const cpu_util_mpstat_command = 'mpstat -P ALL\|grep \\\:\|grep -v \\\%'
+const mem_util_command = 'free'
 const sd_util_command = 'df \/\|grep -v Used\|awk \'\{print \$5\}\'\|awk \'gsub\(\"\%\"\,\"\"\)\''
 
 module.exports = function(app) {
@@ -35,7 +35,7 @@ module.exports = function(app) {
 
   plugin.schema = {
     type: "object",
-    description: "The user running node server must have permission to sudo without needing a password",
+    description: "The user running node server must be in the video group to get GPU temperature",
     properties: {
       path_cpu_temp: {
         title: "SignalK Path for CPU temperature (K)",
