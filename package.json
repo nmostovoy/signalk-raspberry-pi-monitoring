@@ -1,10 +1,10 @@
 {
   "author": {
-    "name": "Nikolay Mostovoy",
-    "email": "mostovoy.nikolay@gmail.com"
+    "name": "Steve Berl",
+    "email": "steveberl@gmail.com"
   },
   "bugs": {
-    "url": "https://github.com/nmostovoy/signalk-raspberry-pi-monitoring/issues"
+    "url": "https://github.com/sberl/signalk-raspberry-pi-monitoring/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
@@ -22,10 +22,10 @@
   "name": "signalk-raspberry-pi-monitoring",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nmostovoy/signalk-raspberry-pi-monitoring.git"
+    "url": "git+https://github.com/sberl/signalk-raspberry-pi-monitoring.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.1.1"
+  "version": "1.2"
 }
