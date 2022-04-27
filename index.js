@@ -21,8 +21,7 @@ const spawn = require('child_process').spawn
 
 const gpu_temp_command = 'sudo /opt/vc/bin/vcgencmd measure_temp'
 const cpu_temp_command = 'sudo cat /sys/class/thermal/thermal_zone0/temp'
-/* Set environment variable so locale doesn't mess up format. sudo not needed */
-const cpu_util_mpstat_command = 'S_TIME_FORMAT=\'ISO\' mpstat -P ALL\|grep \\\:\|grep -v \\\%'
+const cpu_util_mpstat_command = 'S_TIME_FORMAT=\'ISO\' mpstat -P ALL 5 1 | sed -n 4,8p'
 const mem_util_command = 'sudo free'
 const sd_util_command = 'df \/\|grep -v Used\|awk \'\{print \$5\}\'\|awk \'gsub\(\"\%\"\,\"\"\)\''
 
