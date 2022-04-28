@@ -75,6 +75,43 @@ module.exports = function(app) {
   plugin.start = function(options) {
     debug("start")
 
+    // notify server, once, of units metadata
+    app.handleMessage(plugin.id, {
+        updates: [{
+            meta: [{
+                    path: options.path_cpu_temp,
+                    value: {
+                        units: "K"
+                    }
+                },
+                {
+                    path: options.path_gpu_temp,
+                    value: {
+                        units: "K"
+                    }
+                },
+                {
+                    path: options.path_cpu_util,
+                    value: {
+                        units: "ratio"
+                    }
+                },
+                {
+                    path: options.path_mem_util,
+                    value: {
+                        units: "ratio"
+                    }
+                },
+                {
+                    path: options.path_sd_util,
+                    value: {
+                        units: "ratio"
+                    }
+                },
+            ]
+        }]
+    });
+
     function updateEnv() {
       getGpuTemperature()
       getCpuTemperature()
