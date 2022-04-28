@@ -1,6 +1,7 @@
 /*
- *  Copyright 2018 Nikolay Mostovoy <mostovoy.nikolay@gmail.com>
- * ( This plugin is a modified version of signalk-raspberry-pi-temperature - Copyright 2018 Scott Bender <scott@scottbender.net> )
+ *  Copyright 2022 Steve Berl (steveberl@gmail.com)
+ * This plugin is a modified version of signalk-raspberry-pi-monitoring
+ * https://github.com/nmostovoy/signalk-raspberry-pi-monitoring
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +16,7 @@
  * limitations under the License.
  */
 
-const debug = require('debug')('signalk-raspberry-pi-monitoring')
+const debug = require('debug')('signalk-rpi-monitor')
 const _ = require('lodash')
 const spawn = require('child_process').spawn
 
@@ -29,8 +30,8 @@ module.exports = function(app) {
   var plugin = {};
   var timer
 
-  plugin.id = "signalk-raspberry-pi-monitoring"
-  plugin.name = "Raspberry PI Monitoring"
+  plugin.id = "signalk-rpi-monitor"
+  plugin.name = "RPI Monitor"
   plugin.description = "Signal K Node Server Plugin for Raspberry PI monitoring"
 
   plugin.schema = {
