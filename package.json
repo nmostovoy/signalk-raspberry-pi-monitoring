@@ -15,7 +15,9 @@
   "description": "Signal K Node Server Plugin for Raspberry PI monitoring (based on signalk-raspberry-pi-temperature)",
   "homepage": "https://github.com/sberl/signalk-rpi-monitor#readme",
   "keywords": [
-    "signalk-node-server-plugin"
+    "signalk-node-server-plugin",
+    "signalk-category-utility",
+    "signalk-category-hardware"
   ],
   "license": "ISC",
   "main": "index.js",
