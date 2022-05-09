@@ -23,7 +23,7 @@ const gpu_temp_command = 'sudo /opt/vc/bin/vcgencmd measure_temp'
 const cpu_temp_command = 'sudo cat /sys/class/thermal/thermal_zone0/temp'
 const cpu_util_mpstat_command = 'sudo mpstat -P ALL\|grep \\\:\|grep -v \\\%'
 const mem_util_command = 'sudo free'
-const sd_util_command = 'df \/\|grep -v Used\|awk \'\{print \$5\}\'\|awk \'gsub\(\"\%\"\,\"\"\)\''
+const sd_util_command = "df -m / | tail -1 | awk '{print $5}' | awk 'gsub(\"%\",\"\")'"
 
 module.exports = function(app) {
   var plugin = {};
