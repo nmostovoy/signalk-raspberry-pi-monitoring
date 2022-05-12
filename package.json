@@ -1,33 +1,33 @@
 {
-  "author": {
-    "name": "Steve Berl",
-    "email": "steveberl@gmail.com"
-  },
-  "bugs": {
-    "url": "https://github.com/sberl/signalk-rpi-monitor/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "debug": "^2.2.0",
-    "lodash": "^3.10.1"
-  },
-  "deprecated": false,
-  "description": "Signal K Node Server Plugin for Raspberry PI monitoring (based on signalk-raspberry-pi-temperature)",
+  "name": "signalk-rpi-monitor",
+  "version": "1.0.0",
+  "description": "Signal K Node Server Plugin for Raspberry PI monitoring",
   "homepage": "https://github.com/sberl/signalk-rpi-monitor#readme",
   "keywords": [
     "signalk-node-server-plugin",
     "signalk-category-utility",
     "signalk-category-hardware"
   ],
+ "author": {
+    "name": "Steve Berl",
+    "email": "steveberl@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/sberl/signalk-rpi-monitor/issues"
+  },
+  "bundleDependencies": [],
+  "dependencies": {
+    "debug": "^2.2.0",
+    "lodash": "^4.17.21"
+  },
+  "deprecated": false,
   "license": "ISC",
   "main": "index.js",
-  "name": "signalk-rpi-monitor",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sberl/signalk-rpi-monitor.git"
+    "url": "https://github.com/sberl/signalk-rpi-monitor.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "version": "1.2"
+  }
 }
