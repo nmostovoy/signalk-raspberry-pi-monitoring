@@ -1,7 +1,13 @@
 /*
  *  Copyright 2022 Steve Berl (steveberl@gmail.com)
- * This plugin is a modified version of signalk-raspberry-pi-monitoring
+ * This plugin is a modified version of:
  * https://github.com/nmostovoy/signalk-raspberry-pi-monitoring
+ *
+ *  which is a modified version of
+ * https://github.com/sbender9/signalk-raspberry-pi-temperature
+ *
+ * So a big thank you to those who built the foundation on which I am 
+ * adding to.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

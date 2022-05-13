@@ -21,7 +21,7 @@
     "lodash": "^4.17.21"
   },
   "deprecated": false,
-  "license": "ISC",
+  "license": "Apache-2.0",
   "main": "index.js",
   "repository": {
     "type": "git",
