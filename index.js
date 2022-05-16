@@ -1,7 +1,13 @@
 /*
  *  Copyright 2022 Steve Berl (steveberl@gmail.com)
- * This plugin is a modified version of signalk-raspberry-pi-monitoring
+ * This plugin is a modified version of:
  * https://github.com/nmostovoy/signalk-raspberry-pi-monitoring
+ *
+ *  which is a modified version of
+ * https://github.com/sbender9/signalk-raspberry-pi-temperature
+ *
+ * So a big thank you to those who built the foundation on which I am 
+ * adding to.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +26,11 @@ const debug = require('debug')('signalk-rpi-monitor')
 const _ = require('lodash')
 const spawn = require('child_process').spawn
 
-const gpu_temp_command = 'sudo /opt/vc/bin/vcgencmd measure_temp'
-const cpu_temp_command = 'sudo cat /sys/class/thermal/thermal_zone0/temp'
+const gpu_temp_command = 'vcgencmd measure_temp'
+const cpu_temp_command = 'cat /sys/class/thermal/thermal_zone0/temp'
 const cpu_util_mpstat_command = 'S_TIME_FORMAT=\'ISO\' mpstat -P ALL 5 1 | sed -n 4,8p'
-const mem_util_command = 'sudo free'
-const sd_util_command = 'df \/\|grep -v Used\|awk \'\{print \$5\}\'\|awk \'gsub\(\"\%\"\,\"\"\)\''
+const mem_util_command = 'free'
+const sd_util_command = 'df --output=pcent \/\| tail -1 \| awk \'gsub\(\"\%\",\"\"\)\''
 
 module.exports = function(app) {
   var plugin = {};
@@ -36,7 +42,7 @@ module.exports = function(app) {
 
   plugin.schema = {
     type: "object",
-    description: "The user running node server must have permission to sudo without needing a password",
+    description: "The user running node server must be in the video group to get GPU temperature",
     properties: {
       path_cpu_temp: {
         title: "SignalK Path for CPU temperature (K)",
