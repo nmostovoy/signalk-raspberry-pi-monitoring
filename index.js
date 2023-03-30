@@ -1,6 +1,13 @@
 /*
- *  Copyright 2018 Nikolay Mostovoy <mostovoy.nikolay@gmail.com>
- * ( This plugin is a modified version of signalk-raspberry-pi-temperature - Copyright 2018 Scott Bender <scott@scottbender.net> )
+ *  Copyright 2022 Steve Berl (steveberl@gmail.com)
+ * This plugin is a modified version of:
+ * https://github.com/nmostovoy/signalk-raspberry-pi-monitoring
+ *
+ *  which is a modified version of
+ * https://github.com/sbender9/signalk-raspberry-pi-temperature
+ *
+ * So a big thank you to those who built the foundation on which I am 
+ * adding to.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +22,27 @@
  * limitations under the License.
  */
 
-const debug = require('debug')('signalk-raspberry-pi-monitoring')
+const debug = require('debug')('signalk-rpi-monitor')
 const _ = require('lodash')
 const spawn = require('child_process').spawn
 
-const gpu_temp_command = 'sudo /opt/vc/bin/vcgencmd measure_temp'
-const cpu_temp_command = 'sudo cat /sys/class/thermal/thermal_zone0/temp'
-const cpu_util_mpstat_command = 'sudo mpstat -P ALL\|grep \\\:\|grep -v \\\%'
-const mem_util_command = 'sudo free'
-const sd_util_command = 'df \/\|grep -v Used\|awk \'\{print \$5\}\'\|awk \'gsub\(\"\%\"\,\"\"\)\''
+const gpu_temp_command = 'vcgencmd measure_temp'
+const cpu_temp_command = 'cat /sys/class/thermal/thermal_zone0/temp'
+const cpu_util_mpstat_command = 'S_TIME_FORMAT=\'ISO\' mpstat -P ALL 5 1 | sed -n 4,8p'
+const mem_util_command = 'cat /proc/meminfo'
+const sd_util_command = 'df --output=pcent \/\| tail -1 \| awk \'gsub\(\"\%\",\"\"\)\''
 
 module.exports = function(app) {
   var plugin = {};
   var timer
 
-  plugin.id = "signalk-raspberry-pi-monitoring"
-  plugin.name = "Raspberry PI Monitoring"
+  plugin.id = "signalk-rpi-monitor"
+  plugin.name = "RPI Monitor"
   plugin.description = "Signal K Node Server Plugin for Raspberry PI monitoring"
 
   plugin.schema = {
     type: "object",
-    description: "The user running node server must have permission to sudo without needing a password",
+    description: "The user running node server must be in the video group to get GPU temperature",
     properties: {
       path_cpu_temp: {
         title: "SignalK Path for CPU temperature (K)",
@@ -73,6 +80,43 @@ module.exports = function(app) {
 
   plugin.start = function(options) {
     debug("start")
+
+    // notify server, once, of units metadata
+    app.handleMessage(plugin.id, {
+        updates: [{
+            meta: [{
+                    path: options.path_cpu_temp,
+                    value: {
+                        units: "K"
+                    }
+                },
+                {
+                    path: options.path_gpu_temp,
+                    value: {
+                        units: "K"
+                    }
+                },
+                {
+                    path: options.path_cpu_util,
+                    value: {
+                        units: "ratio"
+                    }
+                },
+                {
+                    path: options.path_mem_util,
+                    value: {
+                        units: "ratio"
+                    }
+                },
+                {
+                    path: options.path_sd_util,
+                    value: {
+                        units: "ratio"
+                    }
+                },
+            ]
+        }]
+    });
 
     function updateEnv() {
       getGpuTemperature()
@@ -160,7 +204,7 @@ module.exports = function(app) {
               }
               newPath = newPath + "core." + (Number(spl_line[1])+1).toString()
               newPath = newPath + "." + pathArray[(pathArray.length-1)]
-              var cpu_util_core = ((100 - Number(spl_line[11]))/100).toFixed(2)
+		var cpu_util_core = ((100 - Number(spl_line[11].replace(/,/, '.')))/100).toFixed(2)
               app.handleMessage(plugin.id, {
                 updates: [
                   {
@@ -174,7 +218,7 @@ module.exports = function(app) {
             }
             else {
               debug(`cpu utilisation is ${spl_line[11]}`)
-              cpu_util_all = ((100 - Number(spl_line[11]))/100).toFixed(2)
+		cpu_util_all = ((100 - Number(spl_line[11].replace(/,/, '.')))/100).toFixed(2)
               app.handleMessage(plugin.id, {
                 updates: [
                   {
@@ -205,24 +249,44 @@ module.exports = function(app) {
       memutil.stdout.on('data', (data) => {
         debug(`got memory  ${data}`)
         var mem_util = data.toString().replace(/(\n|\r)+$/, '').split('\n')
-        mem_util.forEach(function(mem_util_line){
+        var mem_total
+        var mem_free
+        var buffers
+        var cached
+        var slab
+        mem_util.forEach(function(mem_util_line) {
           var splm_line = mem_util_line.replace(/ +/g, ' ').split(' ')
-          if (splm_line[0].toString() === "Mem:"){
-            var mem_util_per = (Number(splm_line[2])/Number(splm_line[1])).toFixed(2)
-            app.handleMessage(plugin.id, {
-              updates: [
-                {
-                  values: [ {
-                    path: options.path_mem_util,
-                    value: Number(mem_util_per)
-                  }]
-                }
-              ]
-            })
-          }
+          if (splm_line[0].toString() === "MemTotal:") {
+            mem_total = Number(splm_line[1])
+            debug(`got mem_total = ${mem_total}`)
+	  } else if (splm_line[0].toString() === "MemFree:") {
+	    mem_free = Number(splm_line[1])
+	    debug(`got mem_free = ${mem_free}`)
+          } else if (splm_line[0].toString() === "Buffers:") {
+            buffers = Number(splm_line[1])
+            debug(`got buffers = ${buffers}`)
+          } else if (splm_line[0].toString() === "Cached:") {
+            cached = Number(splm_line[1])
+            debug(`got cached = ${cached}`)
+          } else if (splm_line[0].toString() === "Slab:") {
+            slab = Number(splm_line[1])
+            debug(`got slab = ${slab}`)
+	  }
+	})
+	var mem_util_per = ((mem_total - (mem_free + buffers + cached + slab))/mem_total).toFixed(2)
+	debug(`mem_util_per: ${mem_util_per}`)
+	    
+        app.handleMessage(plugin.id, {
+          updates: [
+            {
+              values: [ {
+                path: options.path_mem_util,
+                value: Number(mem_util_per)
+              }]
+            }
+          ]
         })
       })
-
       memutil.on('error', (error) => {
         console.error(error.toString())
       })
